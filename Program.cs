@@ -1,41 +1,53 @@
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using SchoolManagementSystem.Configurations.AppDbContext;
+using SchoolManagementSystem.Modules.Students.Services;
+using SchoolManagementSystem.Modules.Students.Mappers;
+using SchoolManagementSystem.Modules.Teachers.Repositories;
+using SchoolManagementSystem.Modules.Teachers.Mappers;
+using SchoolManagementSystem.Modules.Classes.Services;
+using SchoolManagementSystem.Modules.Classes.Repositories;
+using SchoolManagementSystem.Modules.Classes.Mappers;
+using SchoolManagementSystem.Modules.Enrollments.Services;
+using SchoolManagementSystem.Modules.Enrollments.Repositories;
+using SchoolManagementSystem.Modules.Enrollments.Mappers;
+using SchoolManagementSystem.Modules.Students.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// Tambahkan AppDbContext ke DI container
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Tambahkan AutoMapper dan pindai semua profil
+builder.Services.AddAutoMapper(typeof(StudentProfile), typeof(TeachersProfile), typeof(ClassProfile), typeof(EnrollmentProfile));
+
+// Tambahkan layanan dan repository ke DI
+builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<ITeacherRepo, TeacherRepository>();
+builder.Services.AddScoped<IClassRepository, ClassRepository>();
+builder.Services.AddScoped<IEnrollmentRepo, EnrollmentServices>();
+builder.Services.AddScoped<IClassRepository, ClassRepository>();
+builder.Services.AddScoped<IClassService, ClassService>();
+
+
+
+// Tambahkan Controller
+builder.Services.AddControllers();
+
+// Tambahkan Swagger/OpenAPI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
