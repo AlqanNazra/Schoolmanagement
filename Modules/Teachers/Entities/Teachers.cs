@@ -6,9 +6,9 @@ namespace SchoolManagementSystem.Modules.Teachers.Entities
     public class Guru
     {
         public int id_teacher { get; set; }
-        public string nama_teacher { get; set; }
-        public string email_teacher { get; set; }
-        public string bidang { get; set; }
+        public required string nama_teacher { get; set; }
+        public required string email_teacher { get; set; }
+        public required string bidang { get; set; }
 
         // Guru utama untuk satu kelas
         public ICollection<Kelas> KelasUtama { get; set; } = new List<Kelas>();

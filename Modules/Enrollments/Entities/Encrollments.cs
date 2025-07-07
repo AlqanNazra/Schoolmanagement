@@ -9,7 +9,7 @@ namespace SchoolManagementSystem.Modules.Enrollments.Entities
         public int id_student { get; set; }
         public int id_kelas { get; set; }
         public DateTime waktu_pendaftaran { get; set; } = DateTime.Now;
-        public Murid Murid { get; set; }
-        public Kelas kelas { get; set; }
+        public  Murid? Murid { get; set; }
+        public  Kelas? kelas { get; set; }
     }
 }

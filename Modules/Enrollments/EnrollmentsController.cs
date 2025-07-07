@@ -11,11 +11,11 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
     [Route("api/[controller]")]
     public class EnrollmentController : ControllerBase
     {
-        private readonly EnrollmentServices _enrollmentService;
+        private readonly IEnrollmentService _service;
 
-        public EnrollmentController(EnrollmentServices enrollmentService)
+        public EnrollmentController(IEnrollmentService service) // <== Ini betul
         {
-            _enrollmentService = enrollmentService;
+            _service = service;
         }
 
         // GET: api/enrollment
@@ -24,7 +24,7 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
         {
             try
             {
-                var enrollments = await _enrollmentService.GetAllEnrollmentsAsync();
+                var enrollments = await _service.GetAllEnrollmentsAsync();
                 return Ok(enrollments);
             }
             catch (Exception ex)
@@ -39,7 +39,7 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
         {
             try
             {
-                var enrollment = await _enrollmentService.GetEnrollmentByIdAsync(id);
+                var enrollment = await _service.GetEnrollmentByIdAsync(id);
                 return Ok(enrollment);
             }
             catch (KeyNotFoundException ex)
@@ -59,13 +59,13 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
             try
             {
                 // Check for duplicate enrollment
-                var existingEnrollments = await _enrollmentService.ExistAsync(enrollmentDto.id_student, enrollmentDto.id_kelas);
+                var existingEnrollments = await _service.ExistAsync(enrollmentDto.id_student, enrollmentDto.id_kelas);
                 if (existingEnrollments != null && existingEnrollments.Any())
                 {
                     return BadRequest("Student is already enrolled in this class.");
                 }
 
-                var createdEnrollment = await _enrollmentService.CreateEnrollmentAsync(enrollmentDto);
+                var createdEnrollment = await _service.CreateEnrollmentAsync(enrollmentDto);
                 return CreatedAtAction(nameof(GetEnrollmentById), new { id = createdEnrollment.id_enrollment }, createdEnrollment);
             }
             catch (ArgumentException ex)
@@ -85,13 +85,13 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
             try
             {
                 // Check for duplicate enrollment when updating
-                var existingEnrollments = await _enrollmentService.ExistAsync(enrollmentDto.id_student, enrollmentDto.id_kelas);
+                var existingEnrollments = await _service.ExistAsync(enrollmentDto.id_student, enrollmentDto.id_kelas);
                 if (existingEnrollments != null && existingEnrollments.Any(e => e.id_enrollment != id))
                 {
                     return BadRequest("Student is already enrolled in this class.");
                 }
 
-                var updatedEnrollment = await _enrollmentService.UpdateEnrollmentAsync(id, enrollmentDto);
+                var updatedEnrollment = await _service.UpdateEnrollmentAsync(id, enrollmentDto);
                 return Ok(updatedEnrollment);
             }
             catch (KeyNotFoundException ex)
@@ -110,7 +110,7 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
         {
             try
             {
-                var result = await _enrollmentService.DeleteEnrollmentAsync(id);
+                var result = await _service.DeleteEnrollmentAsync(id);
                 if (!result)
                 {
                     return NotFound($"Enrollment with ID {id} not found.");

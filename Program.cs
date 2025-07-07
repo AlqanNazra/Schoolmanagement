@@ -11,7 +11,6 @@ using SchoolManagementSystem.Modules.Classes.Mappers;
 using SchoolManagementSystem.Modules.Enrollments.Services;
 using SchoolManagementSystem.Modules.Enrollments.Repositories;
 using SchoolManagementSystem.Modules.Enrollments.Mappers;
-using SchoolManagementSystem.Modules.Students.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +25,8 @@ builder.Services.AddAutoMapper(typeof(StudentProfile), typeof(TeachersProfile), 
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<ITeacherRepo, TeacherRepository>();
 builder.Services.AddScoped<IClassRepository, ClassRepository>();
-builder.Services.AddScoped<IEnrollmentRepo, EnrollmentServices>();
+builder.Services.AddScoped<IEnrollmentService, EnrollmentServices>();
+builder.Services.AddScoped<IEnrollmentRepo, EnrollmentRepository>();
 builder.Services.AddScoped<IClassRepository, ClassRepository>();
 builder.Services.AddScoped<IClassService, ClassService>();
 

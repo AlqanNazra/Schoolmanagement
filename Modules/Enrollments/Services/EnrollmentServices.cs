@@ -11,10 +11,11 @@ using System.Threading.Tasks;
 
 namespace SchoolManagementSystem.Modules.Enrollments.Services
 {
-    public class EnrollmentServices : IEnrollmentRepo
+    public class EnrollmentServices : IEnrollmentService
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+
 
         public EnrollmentServices(AppDbContext context, IMapper mapper)
         {

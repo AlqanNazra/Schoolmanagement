@@ -4,8 +4,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SchoolManagementSystem.Modules.Students.Entities;
-using SchoolManagementSystem.Modules.Students.Repositories;
 using SchoolManagementSystem.Configurations.AppDbContext;
+using SchoolManagementSystem.Modules.Enrollments.Entities;
+using SchoolManagementSystem.Modules.Classes.Entities;
+using SchoolManagementSystem.Common.Requests;
+using SchoolManagementSystem.Common.Responses;
+
 
 namespace SchoolManagementSystem.Modules.Students.Services
 {
@@ -20,13 +24,17 @@ namespace SchoolManagementSystem.Modules.Students.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<StudentDto>> GetAllStudentsAsync()
+        public async Task<PagedResponse<List<StudentDto>>> GetAllStudentsAsync(PaginationParams paginationParams)
         {
-            var students = await _db.Students
-                .Include(m => m.Enrollments)
+            var totalCount = await _db.Students.CountAsync();
+
+            var studentDtos = await _db.Students
+                .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                .Take(paginationParams.PageSize)
+                .Select(s => _mapper.Map<StudentDto>(s))
                 .ToListAsync();
 
-            return _mapper.Map<IEnumerable<StudentDto>>(students);
+            return new PagedResponse<List<StudentDto>>(studentDtos, paginationParams.PageNumber, paginationParams.PageSize, totalCount);
         }
 
         public async Task<StudentDto?> GetStudentByIdAsync(int id)
@@ -91,7 +99,7 @@ namespace SchoolManagementSystem.Modules.Students.Services
                     student.Enrollments.Add(new Pendaftaran
                     {
                         id_kelas = kelasId,
-                        waktu_pendaftaran = DateTime.UtcNow
+                        waktu_pendaftaran = DateTime.UtcNow,
                     });
                 }
             }

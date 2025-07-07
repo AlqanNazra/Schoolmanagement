@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using SchoolManagementSystem.Modules.Students;
 using System.Threading.Tasks;
-using SchoolManagementSystem.Modules.Students.Repositories;
+using SchoolManagementSystem.Modules.Students.Services;
+using SchoolManagementSystem.Common.Requests;
+using SchoolManagementSystem.Common.Responses;
 
 namespace SchoolManagementSystem.Modules.Students.Controllers
 {
@@ -17,12 +19,18 @@ namespace SchoolManagementSystem.Modules.Students.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<PagedResponse<List<StudentDto>>>> GetStudents([FromQuery] PaginationParams paginationParams)
         {
-            var students = await _studentService.GetAllStudentsAsync();
-            return Ok(students);
+            try
+            {
+                var response = await _studentService.GetAllStudentsAsync(paginationParams);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Server error: {ex.Message}");
+            }
         }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
