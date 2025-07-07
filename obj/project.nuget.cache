@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Sd9cFtrMa8g=",
+  "dgSpecHash": "QmrmhRXcbcQ=",
   "success": true,
   "projectFilePath": "D:\\Program(latihan)\\School\\SchoolManagementSystem\\SchoolManagementSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\alqan\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\alqan\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
+    "C:\\Users\\alqan\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\alqan\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\alqan\\.nuget\\packages\\dotnetenv\\3.1.1\\dotnetenv.3.1.1.nupkg.sha512",
     "C:\\Users\\alqan\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

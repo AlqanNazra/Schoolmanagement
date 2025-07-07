@@ -151,3 +151,4 @@ D:\Program(latihan)\School\SchoolManagementSystem\obj\Debug\net9.0\refint\School
 D:\Program(latihan)\School\SchoolManagementSystem\obj\Debug\net9.0\SchoolManagementSystem.pdb
 D:\Program(latihan)\School\SchoolManagementSystem\obj\Debug\net9.0\SchoolManagementSystem.genruntimeconfig.cache
 D:\Program(latihan)\School\SchoolManagementSystem\obj\Debug\net9.0\ref\SchoolManagementSystem.dll
+D:\Program(latihan)\School\SchoolManagementSystem\bin\Debug\net9.0\BCrypt.Net-Next.dll

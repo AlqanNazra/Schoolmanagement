@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SchoolManagementSystem.Modules.Classes.Entities;
+using SchoolManagementSystem.Modules.Users.Entities;
 
 namespace SchoolManagementSystem.Modules.Teachers.Entities
 {
@@ -15,5 +16,9 @@ namespace SchoolManagementSystem.Modules.Teachers.Entities
 
         // Guru mengajar banyak kelas (many-to-many)
         public ICollection<Kelas> KelasDiajarkan { get; set; } = new List<Kelas>();
+
+        // Relasi dengan User
+        public User? User { get; set; }
+        public int? userId { get; set; } // Foreign key untuk User
     }
 }

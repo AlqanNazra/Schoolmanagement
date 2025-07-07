@@ -11,6 +11,11 @@ using SchoolManagementSystem.Modules.Classes.Mappers;
 using SchoolManagementSystem.Modules.Enrollments.Services;
 using SchoolManagementSystem.Modules.Enrollments.Repositories;
 using SchoolManagementSystem.Modules.Enrollments.Mappers;
+using SchoolManagementSystem.Modules.Users.Services;
+using SchoolManagementSystem.Modules.Users.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,11 +34,25 @@ builder.Services.AddScoped<IEnrollmentService, EnrollmentServices>();
 builder.Services.AddScoped<IEnrollmentRepo, EnrollmentRepository>();
 builder.Services.AddScoped<IClassRepository, ClassRepository>();
 builder.Services.AddScoped<IClassService, ClassService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+    });
 
 // Tambahkan Controller
 builder.Services.AddControllers();
+builder.Services.AddAuthorization();
 
 // Tambahkan Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
@@ -46,7 +65,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllers();
 

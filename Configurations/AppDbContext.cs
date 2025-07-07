@@ -3,6 +3,8 @@ using SchoolManagementSystem.Modules.Students.Entities;
 using SchoolManagementSystem.Modules.Teachers.Entities;
 using SchoolManagementSystem.Modules.Classes.Entities;
 using SchoolManagementSystem.Modules.Enrollments.Entities;
+using SchoolManagementSystem.Modules.Users.Entities;
+
 
 namespace SchoolManagementSystem.Configurations.AppDbContext
 {
@@ -16,11 +18,19 @@ namespace SchoolManagementSystem.Configurations.AppDbContext
         public DbSet<Guru> Teachers { get; set; }
         public DbSet<Kelas> Classes { get; set; }
         public DbSet<Pendaftaran> Enrollments { get; set; }
+        
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Primary Key Setiap Entitas
             // Konfigurasi entitas Murid
+            modelBuilder.Entity<User>()
+                .HasKey(s => s.userId);
+
+            modelBuilder.Entity<User>()
+                .Property(s => s.userId)
+                .ValueGeneratedOnAdd();
+
             modelBuilder.Entity<Murid>()
                 .HasKey(s => s.id_student);
 
@@ -53,16 +63,16 @@ namespace SchoolManagementSystem.Configurations.AppDbContext
                 .IsUnique();
 
             // Relasi antara Entitas
-        modelBuilder.Entity<Kelas>()
-            .HasOne(k => k.GuruUtama)
-            .WithMany(g => g.KelasUtama)
-            .HasForeignKey(k => k.id_guru)
-            .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Kelas>()
+                .HasOne(k => k.GuruUtama)
+                .WithMany(g => g.KelasUtama)
+                .HasForeignKey(k => k.id_guru)
+                .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Kelas>()
-            .HasMany(k => k.Pengajar)
-            .WithMany(g => g.KelasDiajarkan)
-            .UsingEntity(j => j.ToTable("KelasGuru"));
+            modelBuilder.Entity<Kelas>()
+                .HasMany(k => k.Pengajar)
+                .WithMany(g => g.KelasDiajarkan)
+                .UsingEntity(j => j.ToTable("KelasGuru"));
 
             modelBuilder.Entity<Pendaftaran>()
                 .HasOne(e => e.Murid)
@@ -75,6 +85,18 @@ namespace SchoolManagementSystem.Configurations.AppDbContext
                 .WithMany(c => c.Enrollments)
                 .HasForeignKey(e => e.id_kelas)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Relasi User dengan Murid dan Guru
+            modelBuilder.Entity<Murid>()
+                .HasOne(m => m.User)
+                .WithOne(u => u.Murid)
+                .HasForeignKey<Murid>(m => m.userId);
+
+            modelBuilder.Entity<Guru>()
+                .HasOne(g => g.User)
+                .WithOne(u => u.Guru)
+                .HasForeignKey<Guru>(g => g.userId);
+
         }
     }
 }
