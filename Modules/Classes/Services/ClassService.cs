@@ -4,17 +4,45 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SchoolManagementSystem.Common.Requests;
+using SchoolManagementSystem.Common.Responses;
+using SchoolManagementSystem.Configurations.AppDbContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace SchoolManagementSystem.Modules.Classes.Services
 {
     public class ClassService : IClassService
     {
+        private readonly AppDbContext _db;
         private readonly IClassRepository _classRepository;
-
-        public ClassService(IClassRepository classRepository)
+        public ClassService(AppDbContext db, IClassRepository classRepository)
         {
+            _db = db;
             _classRepository = classRepository;
         }
+
+
+        public async Task<PagedResponse<List<KelasDto>>> GetAllClassesAsync(PaginationParams paginationParams)
+        {
+            var query = _db.Classes.AsQueryable();
+            var totalCount = await query.CountAsync();
+
+            var classes = await query
+                .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                .Take(paginationParams.PageSize)
+                .ToListAsync();
+
+            var classDtos = classes.Select(c => new KelasDto
+            {
+                nama_kelas = c.nama_kelas,
+                id_kelas = c.id_kelas,
+                id_guru = c.id_guru,
+                pengajarIds = c.Pengajar?.Select(p => p.id_teacher).ToList() ?? new List<int>()
+            }).ToList();
+
+            return new PagedResponse<List<KelasDto>>(classDtos, paginationParams.PageNumber, paginationParams.PageSize, totalCount);
+        }
+
 
         public async Task<IEnumerable<KelasDto>> GetAllClassesAsync()
         {

@@ -4,23 +4,38 @@ using SchoolManagementSystem.Modules.Teachers.Entities;
 using SchoolManagementSystem.Modules.Teachers.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SchoolManagementSystem.Common.Requests;
+using SchoolManagementSystem.Common.Responses;
+using SchoolManagementSystem.Configurations.AppDbContext;
 
 namespace SchoolManagementSystem.Modules.Teachers.Services
 {
     public class TeacherService : ITeacherRepo
     {
+        private readonly AppDbContext _context;
         private readonly ITeacherRepo _teacherRepo;
         private readonly IMapper _mapper;
 
-        public TeacherService(ITeacherRepo teacherRepo, IMapper mapper)
+        public TeacherService(AppDbContext _context ,ITeacherRepo teacherRepo, IMapper mapper)
         {
+            this._context = _context;
             _teacherRepo = teacherRepo;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TeacherDto>> GetAllTeachersAsync()
+        public async Task<PagedResponse<List<TeacherDto>>> GetAllTeachersAsync(PaginationParams paginationParams)
         {
-            return await _teacherRepo.GetAllTeachersAsync();
+            var queary = _context.Teachers.AsQueryable();
+            var totalCount = await queary.CountAsync();
+
+            var teachers = await queary
+                .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                .Take(paginationParams.PageSize)
+                .ToListAsync();
+
+            var teacherDtos = _mapper.Map<List<TeacherDto>>(teachers);
+            return new PagedResponse<List<TeacherDto>>(teacherDtos, paginationParams.PageNumber, paginationParams.PageSize, totalCount);
         }
 
         public async Task<TeacherDto> GetTeacherByIdAsync(int id)

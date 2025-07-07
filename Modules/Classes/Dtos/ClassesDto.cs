@@ -9,5 +9,6 @@ namespace SchoolManagementSystem.Modules.Classes.Dtos
         public int? id_guru { get; set; }
 
         public required List<int> pengajarIds { get; set; }
+        
     }
 }

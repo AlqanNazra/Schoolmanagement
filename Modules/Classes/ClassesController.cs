@@ -4,6 +4,8 @@ using SchoolManagementSystem.Modules.Classes.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SchoolManagementSystem.Common.Requests;
+using SchoolManagementSystem.Common.Responses;
 
 namespace SchoolManagementSystem.Modules.Classes.Controllers
 {
@@ -19,13 +21,13 @@ namespace SchoolManagementSystem.Modules.Classes.Controllers
         }
 
         // GET: api/class
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<KelasDto>>> GetAllClasses()
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetPaged([FromQuery] PaginationParams paginationParams)
         {
             try
             {
-                var classes = await _classService.GetAllClassesAsync();
-                return Ok(classes);
+                var result = await _classService.GetAllClassesAsync(paginationParams);
+                return Ok(result);
             }
             catch (Exception ex)
             {

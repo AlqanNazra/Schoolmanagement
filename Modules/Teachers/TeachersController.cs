@@ -4,6 +4,8 @@ using SchoolManagementSystem.Modules.Teachers.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SchoolManagementSystem.Modules.Teachers.Repositories;
+using SchoolManagementSystem.Common.Requests;
+using SchoolManagementSystem.Common.Responses;
 
 namespace SchoolManagementSystem.Modules.Teachers.Controllers
 {
@@ -18,11 +20,11 @@ namespace SchoolManagementSystem.Modules.Teachers.Controllers
             _teacherService = teacherService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TeacherDto>>> GetAllTeachers()
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetPaged([FromQuery] PaginationParams paginationParams)
         {
-            var teachers = await _teacherService.GetAllTeachersAsync();
-            return Ok(teachers);
+            var result = await _teacherService.GetAllTeachersAsync(paginationParams);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

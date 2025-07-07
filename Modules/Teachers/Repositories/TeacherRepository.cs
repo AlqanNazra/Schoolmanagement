@@ -6,6 +6,8 @@ using SchoolManagementSystem.Modules.Teachers.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SchoolManagementSystem.Common.Requests;
+using SchoolManagementSystem.Common.Responses;
 
 namespace SchoolManagementSystem.Modules.Teachers.Repositories
 {
@@ -20,10 +22,18 @@ namespace SchoolManagementSystem.Modules.Teachers.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TeacherDto>> GetAllTeachersAsync()
+        public async Task<PagedResponse<List<TeacherDto>>> GetAllTeachersAsync(PaginationParams paginationParams)
         {
-            var teachers = await _context.Teachers.ToListAsync();
-            return _mapper.Map<IEnumerable<TeacherDto>>(teachers);
+            var queary = _context.Teachers.AsQueryable();
+            var totalCount = await queary.CountAsync();
+
+            var teachers = await queary
+                .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                .Take(paginationParams.PageSize)
+                .ToListAsync();
+
+            var teacherDtos = _mapper.Map<List<TeacherDto>>(teachers);
+            return new PagedResponse<List<TeacherDto>>(teacherDtos, paginationParams.PageNumber, paginationParams.PageSize, totalCount);
         }
 
         public async Task<TeacherDto> GetTeacherByIdAsync(int id)
