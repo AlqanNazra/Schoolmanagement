@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SchoolManagementSystem.Modules.Teachers.Repositories;
 using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SchoolManagementSystem.Modules.Teachers.Controllers
 {
@@ -20,6 +21,7 @@ namespace SchoolManagementSystem.Modules.Teachers.Controllers
             _teacherService = teacherService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("paged")]
         public async Task<IActionResult> GetPaged([FromQuery] PaginationParams paginationParams)
         {
@@ -41,6 +43,7 @@ namespace SchoolManagementSystem.Modules.Teachers.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<TeacherDto>> CreateTeacher([FromBody] TeacherDto teacherDto)
         {
@@ -55,6 +58,7 @@ namespace SchoolManagementSystem.Modules.Teachers.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<TeacherDto>> UpdateTeacher(int id, [FromBody] TeacherDto teacherDto)
         {
@@ -69,6 +73,7 @@ namespace SchoolManagementSystem.Modules.Teachers.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTeacher(int id)
         {

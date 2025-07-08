@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using SchoolManagementSystem.Modules.Students.Services;
 using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SchoolManagementSystem.Modules.Students.Controllers
 {
@@ -18,7 +19,8 @@ namespace SchoolManagementSystem.Modules.Students.Controllers
             _studentService = studentService;
         }
 
-        [HttpGet]
+        [Authorize(Roles = "Admin,guru")]
+        [HttpGet("paged")]
         public async Task<ActionResult<PagedResponse<List<StudentDto>>>> GetStudents([FromQuery] PaginationParams paginationParams)
         {
             try
@@ -31,6 +33,8 @@ namespace SchoolManagementSystem.Modules.Students.Controllers
                 return StatusCode(500, $"Server error: {ex.Message}");
             }
         }
+
+        [Authorize(Roles = "Admin,guru")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -39,6 +43,7 @@ namespace SchoolManagementSystem.Modules.Students.Controllers
             return Ok(student);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Add(StudentDto studentDto)
         {
@@ -51,6 +56,7 @@ namespace SchoolManagementSystem.Modules.Students.Controllers
             return CreatedAtAction(nameof(GetById), new { id = student.Id }, student);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, StudentDto studentDto)
         {
@@ -64,6 +70,7 @@ namespace SchoolManagementSystem.Modules.Students.Controllers
             return Ok(student);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
