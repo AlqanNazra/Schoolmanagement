@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolManagementSystem.Modules.Enrollments.Dtos;
 using SchoolManagementSystem.Modules.Enrollments.Services;
@@ -19,6 +20,7 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
         }
 
         // GET: api/enrollment
+        [Authorize(Roles = "Admin,guru")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EnrollmentDto>>> GetAllEnrollments()
         {
@@ -34,6 +36,7 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
         }
 
         // GET: api/enrollment/{id}
+        [Authorize(Roles = "Admin,guru")]
         [HttpGet("{id}")]
         public async Task<ActionResult<EnrollmentDto>> GetEnrollmentById(int id)
         {
@@ -53,6 +56,7 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
         }
 
         // POST: api/enrollment
+        [Authorize(Roles = "Admin,guru")]
         [HttpPost]
         public async Task<ActionResult<EnrollmentDto>> CreateEnrollment([FromBody] EnrollmentDto enrollmentDto)
         {
@@ -79,6 +83,7 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
         }
 
         // PUT: api/enrollment/{id}
+        [Authorize(Roles = "Admin,guru")]
         [HttpPut("{id}")]
         public async Task<ActionResult<EnrollmentDto>> UpdateEnrollment(int id, [FromBody] EnrollmentDto enrollmentDto)
         {
@@ -105,6 +110,7 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
         }
 
         // DELETE: api/enrollment/{id}
+        [Authorize(Roles = "Admin,guru")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteEnrollment(int id)
         {
@@ -128,8 +134,6 @@ namespace SchoolManagementSystem.Modules.Enrollments.Controllers
         }
 
     }
-
-    // DTO for enroll request
     public class EnrollRequestDto
     {
         public int id_student { get; set; }

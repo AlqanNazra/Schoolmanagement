@@ -12,7 +12,9 @@ namespace SchoolManagementSystem.Modules.Users
     using SchoolManagementSystem.Modules.Users.Dtos;
     using SchoolManagementSystem.Modules.Users.Services;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
 
+    [Authorize (Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase

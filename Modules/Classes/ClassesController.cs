@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SchoolManagementSystem.Modules.Classes.Controllers
 {
@@ -21,6 +22,7 @@ namespace SchoolManagementSystem.Modules.Classes.Controllers
         }
 
         // GET: api/class
+        [Authorize(Roles = "Admin,guru")]
         [HttpGet("paged")]
         public async Task<IActionResult> GetPaged([FromQuery] PaginationParams paginationParams)
         {
@@ -36,6 +38,7 @@ namespace SchoolManagementSystem.Modules.Classes.Controllers
         }
 
         // GET: api/class/{id}
+        [Authorize(Roles = "Admin,guru")]
         [HttpGet("{id}")]
         public async Task<ActionResult<KelasDto>> GetClassById(int id)
         {
@@ -55,6 +58,7 @@ namespace SchoolManagementSystem.Modules.Classes.Controllers
         }
 
         // POST: api/class
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<KelasDto>> CreateClass([FromBody] KelasDto kelasDto)
         {
@@ -74,6 +78,7 @@ namespace SchoolManagementSystem.Modules.Classes.Controllers
         }
 
         // PUT: api/class/{id}
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<KelasDto>> UpdateClass(int id, [FromBody] KelasDto kelasDto)
         {
@@ -98,6 +103,7 @@ namespace SchoolManagementSystem.Modules.Classes.Controllers
         }
 
         // DELETE: api/class/{id}
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteClass(int id)
         {
@@ -117,6 +123,7 @@ namespace SchoolManagementSystem.Modules.Classes.Controllers
         }
 
         // POST: api/class/{id_kelas}/assign-teacher
+        [Authorize(Roles = "Admin")]
         [HttpPost("{id_kelas}/assign-teacher")]
         public async Task<ActionResult<KelasDto>> AssignTeacher(int id_kelas, [FromBody] AssignTeacherDto assignTeacherDto)
         {
@@ -140,6 +147,7 @@ namespace SchoolManagementSystem.Modules.Classes.Controllers
         }
 
         // POST: api/class/{id_kelas}/unassign-teacher
+        [Authorize(Roles = "Admin")]
         [HttpPost("{id_kelas}/unassign-teacher")]
         public async Task<ActionResult<KelasDto>> UnassignTeacher(int id_kelas)
         {
