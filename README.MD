@@ -26,6 +26,8 @@ Sistem manajemen sekolah berbasis REST API dengan fitur:
 git clone https://github.com/username/school-management-system.git
 cd school-management-system
 
+---
+
 ### 2. Setup Environment (.env)
 Buat file .env dan isi:
 
@@ -41,11 +43,15 @@ JWT_KEY=SuperRahasiaDanPanjangBanget12345678!!!
 JWT_ISSUER=SchoolSystemAPI
 Bisa juga langsung pakai appsettings.json
 
+---
+
 ### 3. Restore & Run
 
 dotnet restore
 dotnet ef database update
 dotnet run
+
+---
 
 ### 4. Struktur File
 
@@ -86,6 +92,8 @@ dotnet run
 ├── appsettings.json 
 ├── .env 
 └── README.md 
+
+---
 
 ### 5. DB Migration & Seeding
 
