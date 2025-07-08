@@ -22,7 +22,6 @@ Sistem manajemen sekolah berbasis REST API dengan fitur:
 ## 🚀 Cara Menjalankan Secara Lokal
 
 ### 1. Clone Repository
-```bash
 git clone https://github.com/username/school-management-system.git
 cd school-management-system
 
